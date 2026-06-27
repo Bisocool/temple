@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bhagavad Gita Jnana Mandir · Where the Gita's Wisdom Lives</title>
+  <meta name="description" content="Bhagavad Gita Jnana Mandir, a sanctuary for Krishna's eternal teaching. Daily darshan and aarti, seva, festivals, and the full Bhagavad Gita." />
+
+  <!-- Fonts: Sanskrit Devanagari + classical English serifs -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Noto+Serif+Devanagari:wght@400;500;600;700&family=Tiro+Devanagari&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/main.css" />
+</head>
+<body class="is-loading">
+
+  <!-- ===== Shared SVG defs (gold gradient + reusable motifs) ===== -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <linearGradient id="goldGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#c9a646" />
+        <stop offset="0.5" stop-color="#e7c963" />
+        <stop offset="1" stop-color="#c9a646" />
+      </linearGradient>
+      <symbol id="lotus" viewBox="0 0 24 24">
+        <path fill="currentColor" d="M12 2c1.2 1.8 1.2 4 0 6-1.2-2-1.2-4.2 0-6Zm0 4.4c1.9.4 3.2 2 3.6 4.2.4-1 1.4-1.8 2.8-2-.2 2.2-1.6 3.9-3.7 4.4 1.5.6 2.4 1.8 2.6 3.5-1.8-.2-3.2-1-4-2.4-.2 1.7.2 3.2 1.1 4.5-1.6-.6-2.7-1.8-3-3.6-.3 1.8-1.4 3-3 3.6.9-1.3 1.3-2.8 1.1-4.5-.8 1.4-2.2 2.2-4 2.4.2-1.7 1.1-2.9 2.6-3.5C5.6 12.5 4.2 10.8 4 8.6c1.4.2 2.4 1 2.8 2C7.2 8.4 8.5 6.8 10.4 6.4 9.5 7.4 9 8.6 9 10c0 .2 0 .4.1.6.7-1.6 1.8-2.6 2.9-2.6s2.2 1 2.9 2.6c.1-.2.1-.4.1-.6 0-1.4-.5-2.6-1.4-3.6Z"/>
+      </symbol>
+      <symbol id="feather" viewBox="0 0 24 24">
+        <path fill="currentColor" d="M20 3c0 6-3 11-9 14-1.7.9-3.4 1.4-5 1.7l-1 3.3-1.5-.5 1-3.2C3.6 17.4 3 15.6 3 14 3 8 8 4 14 4c2.2 0 4.3.4 6 1Zm-4.5 4.2a1.3 1.3 0 1 0 0 2.6 1.3 1.3 0 0 0 0-2.6Z"/>
+      </symbol>
+      <symbol id="flame" viewBox="0 0 24 32">
+        <path fill="#e8893b" d="M12 0c1 5-3 7-3 12a3 3 0 0 0 6 0c0-1-.4-2-.4-2 2 1.5 3.4 4 3.4 7a8 8 0 0 1-16 0c0-5 5-9 5-14 0-1.5 1-2.5 2-3.5 1.3 1 3 2.4 3 3Z"/>
+        <path fill="#e7c963" d="M12 14c.6 2.6-1.6 3.8-1.6 6.4a3 3 0 0 0 6 0c0-2.4-2.4-3.4-4.4-6.4Z"/>
+      </symbol>
+    </defs>
+  </svg>
+
+  <!-- ============================================================
+       LOADING SCREEN
+       ============================================================ -->
+  <div id="loader" aria-hidden="true">
+    <div class="loader-door left">
+      <div class="door-art loader-art-zoom has-image"></div>
+    </div>
+    <div class="loader-door right">
+      <div class="door-art loader-art-zoom has-image"></div>
+    </div>
+    <div class="seam"></div>
+
+    <div class="loader-content">
+      <div class="verse-panel jali-frame" id="versePanel">
+        <svg class="corner tl" viewBox="0 0 24 24"><use href="#lotus"/></svg>
+        <svg class="corner tr" viewBox="0 0 24 24"><use href="#lotus"/></svg>
+        <svg class="corner bl" viewBox="0 0 24 24"><use href="#lotus"/></svg>
+        <svg class="corner br" viewBox="0 0 24 24"><use href="#lotus"/></svg>
+        <p class="v-sanskrit" id="vSanskrit"></p>
+        <p class="v-english" id="vEnglish"></p>
+        <p class="v-cite" id="vCite"></p>
+      </div>
+    </div>
+
+    <div class="loader-bar-wrap">
+      <div class="loader-status" id="loaderStatus">
+        <span class="sanskrit-mini">द्वाराणि उद्घाट्यन्ते</span> · Opening the gates
+      </div>
+      <div class="loader-bar"><div class="fill" id="loaderFill"></div></div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       NAVIGATION
+       ============================================================ -->
+  <nav class="site-nav" id="siteNav">
+    <div class="wrap">
+      <a class="brand" href="#top" aria-label="Bhagavad Gita Jnana Mandir, home">
+        <svg class="mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#lotus"/></svg>
+        <span class="brand-name">
+          Gita Jnana Mandir
+          <small class="sanskrit">भगवद्गीता ज्ञान मन्दिर</small>
+        </span>
+      </a>
+      <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+      <div class="nav-links" id="navLinks">
+        <a href="#about">The Deity</a>
+        <a href="#aarti">Aarti</a>
+        <a href="#festivals">Festivals</a>
+        <a href="#gita">Gita</a>
+        <a href="#visit">Visit</a>
+        <a href="#seva" class="nav-cta">Offer Seva</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ============================================================
+       HERO
+       ============================================================ -->
+  <header class="hero" id="top">
+    <div class="hero-art"></div>
+
+    <!-- signature flute: a single gold line resting across the lower third -->
+    <div class="hero-flute" aria-hidden="true">
+      <svg viewBox="0 0 1200 200" preserveAspectRatio="none">
+        <path id="heroFlutePath" d="M40 150 C 300 120, 520 110, 760 95 S 1080 70, 1160 58" />
+      </svg>
+    </div>
+
+    <div class="wrap">
+      <div class="hero-content">
+        <span class="eyebrow"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#feather"/></svg> Digital Darshan</span>
+        <h1 class="hero-title">Where the Gita's <span class="em">Wisdom</span> Lives.</h1>
+        <p class="hero-sub">A home for Krishna's eternal teaching, His warmth, and His unending grace. Spoken once on a battlefield, alive forever in every heart.</p>
+        <div class="hero-actions">
+          <a href="#about" class="btn btn-primary">Begin Your Darshan</a>
+          <a href="#aarti" class="btn btn-ghost">Today's Aarti Timings</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="aarti-chip" id="aartiChip">
+      <svg class="flame" viewBox="0 0 24 32" aria-hidden="true"><use href="#flame"/></svg>
+      <div>
+        <div class="label">Next Aarti</div>
+        <div class="value" id="aartiChipValue">Sandhya Aarti · 6:30 PM</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- flute spine: vertical scroll-progress rail (fills as you scroll) -->
+  <div class="flute-spine" id="fluteSpine" aria-hidden="true">
+    <svg viewBox="0 0 40 1000" preserveAspectRatio="none">
+      <path class="spine-glow" id="spineGlow" d="M20 0 C 12 120, 28 240, 20 360 S 12 600, 20 720 S 28 880, 20 1000" />
+      <path class="spine-path" id="spinePath" d="M20 0 C 12 120, 28 240, 20 360 S 12 600, 20 720 S 28 880, 20 1000" />
+    </svg>
+  </div>
+
+  <main>
+    <!-- ============================================================
+         ABOUT THE DEITY & TEMPLE
+         ============================================================ -->
+    <section class="section bg-indigo" id="about">
+      <div class="wrap">
+        <div class="lotus-divider reveal"><svg viewBox="0 0 24 24"><use href="#lotus"/></svg></div>
+        <div class="about-grid" style="margin-top:3rem">
+          <div class="about-art reveal">
+            <div class="frame-line"></div>
+          </div>
+          <div class="about-text reveal">
+            <span class="eyebrow">The Lord of the Chariot</span>
+            <h2 class="about-lead">Parthasarathi: the friend who took the reins.</h2>
+            <div class="about-body">
+              <p>On the field of Kurukshetra, when the warrior Arjuna let his bow fall in despair, Krishna did not leave his side. As <strong>Parthasarathi</strong>, the charioteer of Partha, He turned a moment of collapse into the most luminous teaching the world has known. The <strong>Bhagavad Gita</strong> is that conversation, eighteen chapters of a friend speaking a soul back to its courage.</p>
+              <p>Our temple is built around that teaching, not a single shrine alone but the living wisdom it carries. We call it <em>jnana</em>, the knowledge that frees. Here the chariot, the war within, and the quiet voice of guidance are remembered every day, in song, in lamp-light, and in the verses you carry home.</p>
+              <p>Whether you arrive in person or through this screen, you are received the same way: as a devotee come for <em>darshan</em>, the grace of beholding and being beheld by the Lord.</p>
+            </div>
+            <a href="#gita" class="btn btn-ghost" style="margin-top:1.8rem">Read the Teaching</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         AARTI & DARSHAN TIMINGS
+         ============================================================ -->
+    <section class="section bg-maroon-deep" id="aarti">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <span class="eyebrow">The Daily Rhythm</span>
+          <h2>Aarti &amp; Darshan Timings</h2>
+          <p>Aarti is the offering of light to the Lord, the lamp circled in love at the threshold of each day. You are warmly welcome at every one. The hour nearest now is marked.</p>
+        </div>
+
+        <div class="aarti-board reveal" id="aartiBoard">
+          <div class="aarti-item" data-start="300" data-end="420">
+            <div class="next-flag"><svg viewBox="0 0 24 32"><use href="#flame"/></svg> Now Welcoming</div>
+            <div class="a-time">5:00 AM</div>
+            <div class="a-name">Mangala Aarti</div>
+            <div class="a-sanskrit sanskrit">मङ्गल आरती</div>
+            <div class="a-note">The waking of the Lord, the first lamp of the day.</div>
+          </div>
+          <div class="aarti-item" data-start="450" data-end="660">
+            <div class="next-flag"><svg viewBox="0 0 24 32"><use href="#flame"/></svg> Now Welcoming</div>
+            <div class="a-time">7:30 AM</div>
+            <div class="a-name">Shringar Darshan</div>
+            <div class="a-sanskrit sanskrit">शृङ्गार दर्शन</div>
+            <div class="a-note">The Lord adorned in fresh alankaram, dress and flowers.</div>
+          </div>
+          <div class="aarti-item" data-start="690" data-end="900">
+            <div class="next-flag"><svg viewBox="0 0 24 32"><use href="#flame"/></svg> Now Welcoming</div>
+            <div class="a-time">12:00 PM</div>
+            <div class="a-name">Raj Bhog Aarti</div>
+            <div class="a-sanskrit sanskrit">राजभोग आरती</div>
+            <div class="a-note">The midday offering of food, followed by rest.</div>
+          </div>
+          <div class="aarti-item" data-start="990" data-end="1140">
+            <div class="next-flag"><svg viewBox="0 0 24 32"><use href="#flame"/></svg> Now Welcoming</div>
+            <div class="a-time">6:30 PM</div>
+            <div class="a-name">Sandhya Aarti</div>
+            <div class="a-sanskrit sanskrit">सन्ध्या आरती</div>
+            <div class="a-note">The evening lamp at dusk, our most attended darshan.</div>
+          </div>
+          <div class="aarti-item" data-start="1170" data-end="1260">
+            <div class="next-flag"><svg viewBox="0 0 24 32"><use href="#flame"/></svg> Now Welcoming</div>
+            <div class="a-time">8:30 PM</div>
+            <div class="a-name">Shayan Aarti</div>
+            <div class="a-sanskrit sanskrit">शयन आरती</div>
+            <div class="a-note">The last lamp, as the Lord is laid to rest for the night.</div>
+          </div>
+        </div>
+        <p class="gloss reveal" style="margin-top:1.6rem;font-size:0.95rem">Darshan remains open between aartis. Timings shift gently with the seasons and festival days; please check before a long journey.</p>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         FESTIVAL CALENDAR
+         ============================================================ -->
+    <section class="section bg-indigo" id="festivals">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <span class="eyebrow">The Sacred Year</span>
+          <h2>Festival Calendar</h2>
+          <p>The year turns through the Lord's leelas, His divine play. Join us for each one. The next great celebration draws near.</p>
+        </div>
+
+        <div class="festival-feature">
+          <div class="countdown-card jali-frame reveal">
+            <svg class="corner tl" viewBox="0 0 24 24"><use href="#lotus"/></svg>
+            <svg class="corner tr" viewBox="0 0 24 24"><use href="#lotus"/></svg>
+            <svg class="corner bl" viewBox="0 0 24 24"><use href="#lotus"/></svg>
+            <svg class="corner br" viewBox="0 0 24 24"><use href="#lotus"/></svg>
+            <div class="cd-festival">Sri Krishna Janmashtami</div>
+            <div class="cd-sanskrit sanskrit">श्री कृष्ण जन्माष्टमी</div>
+            <div class="cd-date" id="cdDate">Wednesday, 26 August 2026</div>
+            <div class="countdown" id="countdown">
+              <div class="cd-unit"><div class="num" id="cdDays">--</div><div class="lbl">Days</div></div>
+              <div class="cd-unit"><div class="num" id="cdHours">--</div><div class="lbl">Hours</div></div>
+              <div class="cd-unit"><div class="num" id="cdMins">--</div><div class="lbl">Minutes</div></div>
+              <div class="cd-unit"><div class="num" id="cdSecs">--</div><div class="lbl">Seconds</div></div>
+            </div>
+          </div>
+          <div class="festival-intro reveal">
+            <h3 style="font-family:var(--f-head);font-size:1.7rem;color:var(--ivory);margin-bottom:1rem">The night the Lord was born.</h3>
+            <p>Janmashtami marks the midnight birth of Sri Krishna in the prison of Mathura. We keep vigil through the evening with bhajan and abhishekam, the bathing of the deity, until the sacred hour arrives and the cradle is rocked. Prasadam is offered to all who stay.</p>
+            <p style="margin-top:1rem">Bring your family. There is no ticket and no queue for love.</p>
+          </div>
+        </div>
+
+        <div class="festival-list reveal">
+          <div class="festival-row">
+            <div class="f-day">19<span class="f-month">Feb</span></div>
+            <div><div class="f-name">Maha Shivaratri Vigil</div><div class="f-sanskrit sanskrit">महाशिवरात्रि</div></div>
+          </div>
+          <div class="festival-row">
+            <div class="f-day">14<span class="f-month">Mar</span></div>
+            <div><div class="f-name">Holi &amp; Phalgun Utsav</div><div class="f-sanskrit sanskrit">होली</div></div>
+          </div>
+          <div class="festival-row">
+            <div class="f-day">26<span class="f-month">Aug</span></div>
+            <div><div class="f-name">Krishna Janmashtami</div><div class="f-sanskrit sanskrit">जन्माष्टमी</div></div>
+          </div>
+          <div class="festival-row">
+            <div class="f-day">11<span class="f-month">Nov</span></div>
+            <div><div class="f-name">Govardhan Puja &amp; Annakut</div><div class="f-sanskrit sanskrit">गोवर्धन पूजा</div></div>
+          </div>
+          <div class="festival-row">
+            <div class="f-day">Each<span class="f-month">Paksha</span></div>
+            <div><div class="f-name">Ekadashi Observance</div><div class="f-sanskrit sanskrit">एकादशी</div></div>
+          </div>
+          <div class="festival-row">
+            <div class="f-day">Each<span class="f-month">Full Moon</span></div>
+            <div><div class="f-name">Purnima Satsang</div><div class="f-sanskrit sanskrit">पूर्णिमा सत्सङ्ग</div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         SEVA & DONATIONS
+         ============================================================ -->
+    <section class="section bg-maroon-deep" id="seva">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <span class="eyebrow">Offer With Love</span>
+          <h2>Seva &amp; Donations</h2>
+          <p>Seva is selfless service, a way to take part in the Lord's care. Offer one in your family's name, for a birth, a memory, or simple gratitude. Every offering is received with a receipt and a blessing.</p>
+        </div>
+
+        <div class="seva-grid">
+          <div class="seva-card reveal">
+            <svg class="s-icon" viewBox="0 0 24 24"><use href="#flame"/></svg>
+            <h3>Abhishekam</h3>
+            <div class="s-sanskrit sanskrit">अभिषेकम्</div>
+            <p>The sacred bathing of the deity in milk, honey, and water, performed in your name with the chanting of holy verses.</p>
+            <div class="s-foot">
+              <div class="s-amount">₹2,100 <small>/ offering</small></div>
+              <a href="#seva" class="s-offer">Offer Seva</a>
+            </div>
+          </div>
+          <div class="seva-card reveal">
+            <svg class="s-icon" viewBox="0 0 24 24"><use href="#lotus"/></svg>
+            <h3>Annadanam</h3>
+            <div class="s-sanskrit sanskrit">अन्नदानम्</div>
+            <p>The offering of food to all who come. Sponsor a day of free meals so that no devotee leaves the temple hungry.</p>
+            <div class="s-foot">
+              <div class="s-amount">₹5,100 <small>/ day</small></div>
+              <a href="#seva" class="s-offer">Sponsor a Day</a>
+            </div>
+          </div>
+          <div class="seva-card reveal">
+            <svg class="s-icon" viewBox="0 0 24 24"><use href="#feather"/></svg>
+            <h3>Archana</h3>
+            <div class="s-sanskrit sanskrit">अर्चना</div>
+            <p>A personal worship in your name and gotra, with flowers and the recitation of the Lord's names on your behalf.</p>
+            <div class="s-foot">
+              <div class="s-amount">₹501 <small>/ archana</small></div>
+              <a href="#seva" class="s-offer">Request Archana</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="donation-banner reveal">
+          <div class="d-text">
+            <h3>A general offering to the temple</h3>
+            <p>If you wish simply to give, your contribution sustains the daily aarti, the lamps, the upkeep of the shrine, and the meals we serve. Give as your heart moves you, in any amount.</p>
+          </div>
+          <a href="#seva" class="btn btn-primary">Make an Offering</a>
+        </div>
+        <p class="gloss reveal" style="margin-top:1.4rem;font-size:0.92rem">All offerings are processed on a secure payment gateway. The temple is a registered charitable trust; donation receipts are issued for every contribution.</p>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         GITA & TEACHINGS
+         ============================================================ -->
+    <section class="section bg-indigo" id="gita">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <span class="eyebrow">The Living Library</span>
+          <h2>Gita &amp; Teachings</h2>
+          <p>The whole of the Bhagavad Gita, chapter by chapter, with a verse offered fresh each day. Read slowly. The Gita is not finished in a sitting; it is kept for a lifetime.</p>
+        </div>
+
+        <div class="gita-layout" style="margin-top:3rem">
+          <div class="verse-feature jali-frame reveal">
+            <svg class="corner tl" viewBox="0 0 24 24"><use href="#lotus"/></svg>
+            <svg class="corner tr" viewBox="0 0 24 24"><use href="#lotus"/></svg>
+            <svg class="corner bl" viewBox="0 0 24 24"><use href="#lotus"/></svg>
+            <svg class="corner br" viewBox="0 0 24 24"><use href="#lotus"/></svg>
+            <div class="eyebrow" style="margin-bottom:1.4rem">Verse of the Day</div>
+            <p class="vf-sanskrit sanskrit" id="dailySanskrit"></p>
+            <p class="vf-english" id="dailyEnglish"></p>
+            <p class="vf-cite" id="dailyCite"></p>
+          </div>
+
+          <div class="reveal">
+            <div class="chapter-list">
+              <a class="chapter-link" href="#gita"><span class="ch-num">1</span><span class="ch-name">Arjuna Vishada<small>The despair on the field</small></span></a>
+              <a class="chapter-link" href="#gita"><span class="ch-num">2</span><span class="ch-name">Sankhya Yoga<small>The eternal soul</small></span></a>
+              <a class="chapter-link" href="#gita"><span class="ch-num">3</span><span class="ch-name">Karma Yoga<small>The path of action</small></span></a>
+              <a class="chapter-link" href="#gita"><span class="ch-num">4</span><span class="ch-name">Jnana Yoga<small>The path of wisdom</small></span></a>
+              <a class="chapter-link" href="#gita"><span class="ch-num">6</span><span class="ch-name">Dhyana Yoga<small>The path of meditation</small></span></a>
+              <a class="chapter-link" href="#gita"><span class="ch-num">9</span><span class="ch-name">Raja Vidya<small>The royal knowledge</small></span></a>
+              <a class="chapter-link" href="#gita"><span class="ch-num">12</span><span class="ch-name">Bhakti Yoga<small>The path of devotion</small></span></a>
+              <a class="chapter-link" href="#gita"><span class="ch-num">18</span><span class="ch-name">Moksha Yoga<small>The way of surrender</small></span></a>
+            </div>
+            <div class="gita-foot">
+              <a href="#gita" class="btn btn-ghost">All Eighteen Chapters</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         GALLERY
+         ============================================================ -->
+    <section class="section bg-maroon-deep" id="gallery">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <span class="eyebrow">Darshan in Pictures</span>
+          <h2>Gallery</h2>
+          <p>The deity's daily alankaram, the gathering of devotees, and the temple bathed in festival light.</p>
+        </div>
+        <div class="gallery-grid">
+          <div class="gallery-tile wide tall reveal">
+            <img src="https://picsum.photos/seed/krishna-temple-deity-gold/900/900" alt="The deity adorned for evening darshan" loading="lazy" />
+            <div class="g-cap">Sandhya alankaram, the evening adornment</div>
+          </div>
+          <div class="gallery-tile reveal">
+            <img src="https://picsum.photos/seed/temple-diya-lamps-flame/500/500" alt="Rows of oil lamps lit for aarti" loading="lazy" />
+            <div class="g-cap">Lamps for the aarti</div>
+          </div>
+          <div class="gallery-tile reveal">
+            <img src="https://picsum.photos/seed/temple-marigold-flowers-offering/500/500" alt="Marigold garlands prepared as offering" loading="lazy" />
+            <div class="g-cap">Garlands for the Lord</div>
+          </div>
+          <div class="gallery-tile wide reveal">
+            <img src="https://picsum.photos/seed/janmashtami-festival-crowd-night/900/500" alt="Devotees gathered on Janmashtami night" loading="lazy" />
+            <div class="g-cap">Janmashtami vigil</div>
+          </div>
+          <div class="gallery-tile reveal">
+            <img src="https://picsum.photos/seed/temple-sandstone-gopuram-arch/500/500" alt="Carved sandstone archway of the temple" loading="lazy" />
+            <div class="g-cap">The carved gopuram</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         VISIT US
+         ============================================================ -->
+    <section class="section bg-indigo" id="visit">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <span class="eyebrow">Come for Darshan</span>
+          <h2>Visit Us</h2>
+          <p>The doors are open to all, every day. A few gentle notes to help your visit feel unhurried and at home.</p>
+        </div>
+
+        <div class="visit-grid" style="margin-top:3rem">
+          <div class="visit-info reveal">
+            <div class="visit-block">
+              <h3>Address</h3>
+              <p>Bhagavad Gita Jnana Mandir<br/><span>Chariot Road, Banjara Hills, Hyderabad, Telangana 500034</span></p>
+            </div>
+            <div class="visit-block">
+              <h3>Darshan Hours</h3>
+              <p>Daily, 5:00 AM to 9:00 PM<br/><span>The sanctum closes briefly after the midday Raj Bhog Aarti for the Lord's rest.</span></p>
+            </div>
+            <div class="visit-block">
+              <h3>Temple Etiquette</h3>
+              <p><span>Please dress modestly, with shoulders and knees covered. Footwear is left at the entrance. Photography is welcomed in the courtyard but kept silent within the sanctum.</span></p>
+            </div>
+            <div class="visit-block">
+              <h3>Getting Here</h3>
+              <p><span>Accessible by metro to Khairatabad, then a short ride. Step-free access and seating are available for elderly and differently-abled devotees.</span></p>
+            </div>
+          </div>
+          <div class="visit-map reveal">
+            <div class="map-inner">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 21s-7-5.5-7-11a7 7 0 0 1 14 0c0 5.5-7 11-7 11Z"/><circle cx="12" cy="10" r="2.5"/></svg>
+              <p>A map to the temple will rest here.<br/><span style="font-size:0.88rem">Embed your Google Maps or OpenStreetMap location in this frame.</span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============================================================
+       FOOTER
+       ============================================================ -->
+  <footer class="site-footer">
+    <div class="wrap">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <a class="brand" href="#top">
+            <svg class="mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#lotus"/></svg>
+            <span class="brand-name">Gita Jnana Mandir<small class="sanskrit">भगवद्गीता ज्ञान मन्दिर</small></span>
+          </a>
+          <p>The house that the teaching built. A sanctuary for Krishna's eternal wisdom, open to every heart that seeks it.</p>
+        </div>
+        <div class="footer-col">
+          <h4>The Temple</h4>
+          <a href="#about">The Deity</a>
+          <a href="#aarti">Aarti Timings</a>
+          <a href="#festivals">Festivals</a>
+          <a href="#gallery">Gallery</a>
+          <a href="#visit">Visit Us</a>
+        </div>
+        <div class="footer-col">
+          <h4>Devotion</h4>
+          <a href="#gita">Gita &amp; Teachings</a>
+          <a href="#seva">Seva &amp; Donations</a>
+          <a href="#seva">Prasadam</a>
+          <a href="#festivals">Live Darshan</a>
+          <a href="#about">Daily Verse</a>
+        </div>
+        <div class="footer-col newsletter">
+          <h4>Stay in the Lord's Grace</h4>
+          <p>Receive the verse of the day and festival reminders, gently, never more than a note a week.</p>
+          <form id="newsletterForm" novalidate>
+            <label for="nlEmail" class="sr-only" style="position:absolute;left:-9999px">Email address</label>
+            <input id="nlEmail" type="email" placeholder="Your email" autocomplete="email" />
+            <button type="submit">Subscribe</button>
+          </form>
+          <p id="nlMsg" style="margin-top:0.7rem;min-height:1.2em;color:var(--gold-soft)"></p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div>© 2026 Bhagavad Gita Jnana Mandir · A registered charitable trust</div>
+        <div class="trust">
+          <a href="#visit">Trust &amp; Transparency</a>
+          <a href="#visit">Annual Report</a>
+          <a href="#visit">Contact</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- GSAP for the scroll-scrubbed flute -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="js/verses.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
