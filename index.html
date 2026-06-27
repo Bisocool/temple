@@ -28,6 +28,16 @@
         { value: '.vf-cite' },    /* daily-verse citation (contains Devanagari) */
       ],
     });
+    /* Reload when the user picks a new language so the loading screen replays in it.
+       _pageStartLang captures whatever language was already saved when this page
+       loaded. When Weglot auto-restores that same language on reload it fires
+       languageChanged too — we ignore that firing to break the infinite loop. */
+    var _pageStartLang = localStorage.getItem('wglang') || 'en';
+    Weglot.on('languageChanged', function (newLang) {
+      if (newLang === _pageStartLang) return;
+      _pageStartLang = newLang;
+      window.location.reload();
+    });
   </script>
 </head>
 
