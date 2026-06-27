@@ -22,8 +22,28 @@
     const elEng   = $("#vEnglish");
     const elCite  = $("#vCite");
 
-    // Pick a random verse for this visit.
+    // Detect the language Weglot has active. Weglot stores its current
+    // language in localStorage under "wglang" and exposes getCurrentLang().
+    // The loader runs before Weglot translates the DOM, so we read this
+    // directly and serve the right text ourselves.
+    const lang = (typeof Weglot !== "undefined" && Weglot.getCurrentLang && Weglot.getCurrentLang()) ||
+                 localStorage.getItem("wglang") ||
+                 "en";
+
+    // Status-line translations for each supported language.
+    // Sanskrit half (Devanagari) is the same in every language.
+    const LOADER_STRINGS = {
+      en: { opening: "Opening the gates",      lighting: "Lighting the lamp",            sit: "Sit with these words",       welcome: "Welcome"     },
+      te: { opening: "ద్వారాలు తెరుచుకుంటున్నాయి", lighting: "దీపం వెలుగుతోంది",       sit: "ఈ మాటలతో ఉండండి",            welcome: "స్వాగతం"     },
+      hi: { opening: "द्वार खुल रहे हैं",      lighting: "दीप प्रज्वलित हो रहा है",    sit: "इन शब्दों के साथ बैठें",    welcome: "स्वागत है"   },
+    };
+    const ls = LOADER_STRINGS[lang] || LOADER_STRINGS.en;
+
+    // Pick a random verse and resolve the translation for the chosen language.
+    // The sanskrit field is never replaced — only the translation line changes.
     const verse = GITA_VERSES[Math.floor(Math.random() * GITA_VERSES.length)];
+    const verseTranslation = verse[lang] || verse.english;
+    const verseLocale      = lang === "te" ? "te" : lang === "hi" ? "hi" : "en";
     elCite.textContent = verse.citation;
 
     // --- helpers ---
@@ -111,7 +131,7 @@
       if (reduceMotion) {
         // Instant version for users who prefer no motion.
         elSan.textContent  = verse.sanskrit;
-        elEng.textContent  = verse.english;
+        elEng.textContent  = verseTranslation;
         elSan.style.opacity = elEng.style.opacity = "1";
         elCite.classList.add("is-revealed");
         panel.classList.add("show");
@@ -123,13 +143,13 @@
       // --- Stage 0: panel slides up, status line, bar starts ---
       setTimeout(function () {
         panel.classList.add("show");
-        setStatus("द्वाराणि उद्घाट्यन्ते", "Opening the gates");
+        setStatus("द्वाराणि उद्घाट्यन्ते", ls.opening);
         setBar(14);
 
         // Small delay so the panel transition finishes before typing begins.
         setTimeout(function () {
 
-          // --- Stage 1: type the Sanskrit verse ---
+          // --- Stage 1: type the Sanskrit verse (always Devanagari, never translated) ---
           typeInto(
             elSan,
             verse.sanskrit,
@@ -138,17 +158,17 @@
             "sa",
             function onSanskritDone() {
               setBar(48);
-              setStatus("दीपः प्रज्वल्यते", "Lighting the lamp");
+              setStatus("दीपः प्रज्वल्यते", ls.lighting);
 
-              // --- Stage 2: type the English translation ---
+              // --- Stage 2: type the verse translation in the active language ---
               setTimeout(function () {
                 typeInto(
                   elEng,
-                  verse.english,
-                  42,    // ~42 ms per char → full line in ~1.8–2.4 s
-                  0.5,   // ±21 ms jitter
-                  "en",
-                  function onEnglishDone() {
+                  verseTranslation,   // te / hi / en depending on Weglot language
+                  42,
+                  0.5,
+                  verseLocale,        // correct Intl.Segmenter locale for the script
+                  function onTranslationDone() {
                     setBar(78);
 
                     // Citation fades in as the last character lands.
@@ -162,7 +182,7 @@
                     // over the full 6 seconds — its completion is the
                     // only signal that the gates are about to open.
                     setTimeout(function () {
-                      setStatus("ध्यायत", "Sit with these words");
+                      setStatus("ध्यायत", ls.sit);
 
                       // Bar fills over the entire reading window so
                       // the devotee can sense the time remaining.
@@ -173,7 +193,7 @@
 
                       // Status shifts to "Welcome" in the last second.
                       setTimeout(function () {
-                        setStatus("स्वागतम्", "Welcome");
+                        setStatus("स्वागतम्", ls.welcome);
                       }, 5000);
 
                       // --- Stage 4: doors open after the full pause ---
